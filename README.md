@@ -4,7 +4,25 @@ This sample contains the DayTrader 8 benchmark, which is an application built ar
 
 DayTrader is an end-to-end benchmark and performance sample application. It provides a real world Java EE workload. DayTrader's new design spans Java EE 8.
 
-This sample can be installed onto Liberty runtime versions 18.0.0.2 and later.
+This sample can be installed onto Liberty runtime versions 18.0.0.2 and later. A prebuilt derby database is provided in resources/data
+
+
+To run this sample, first [download](https://github.com/OpenLiberty/sample.daytrader8/archive/master.zip) or clone this repo - to clone:
+```
+git clone git@github.com:OpenLiberty/sample.daytrader8.git
+```
+
+From inside the sample.daytrader8 directory, build and start the application in Open Liberty with the following command:
+```
+mvn clean package liberty:run-server
+```
+
+The server will listen on port 9080 by default.  You can change the port (for example, to port 9081) by adding `mvn clean package liberty:run-server -DtestServerHttpPort=9081` to the end of the Maven command.
+
+Once the server is started, you should be able to access the application at:
+http://localhost:9080/daytrader
+
+
 
 ## Notice
 
