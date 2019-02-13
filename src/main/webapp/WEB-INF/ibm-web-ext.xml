@@ -18,7 +18,7 @@
     xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-ext_1_0.xsd" version="1.0">
   <jsp-attribute name="reloadEnabled" value="false"/>
   <jsp-attribute name="reloadInterval" value="10"/>
-  <context-root uri="daytrader8-web" />
+  <!-- <context-root uri="daytrader8-web" />-->
   <resource-ref name="jdbc/TradeDataSource" isolation-level="TRANSACTION_READ_COMMITTED"/>
   <resource-ref name="jms/QueueConnectionFactory" isolation-level="TRANSACTION_READ_COMMITTED"/>
   <resource-ref name="jms/TopicConnectionFactory" isolation-level="TRANSACTION_READ_COMMITTED"/>
