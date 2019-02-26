@@ -32,8 +32,9 @@
         var url;
         var int;
        
-        url = ((window.location.protocol === "https:") ? "wss://" : "ws://") + window.location.host + "/daytrader/marketsummary"; 
-              
+        url = ((window.location.protocol === "https:") ? "wss://" : "ws://") +window.location.host + window.location.pathname + "/marketsummary"; 
+        url = url.replace("/marketSummary.faces","");
+                      
         //Connect and setup handlers
         websocket = new WebSocket(url);
         websocket.onopen = function(evt) { onOpen(evt) };
