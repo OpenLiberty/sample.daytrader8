@@ -1,13 +1,13 @@
-# Java EE8: DayTrader8 Sample
+# Daytrader8: Load Testing
 This readme explains how to setup DB2 and load test the Daytrader 8 application with Open Liberty.
 
-** Prerequisites
+## Prerequisites
 
 1. Open Liberty Machine (Server with Open Liberty unzipped at <OPENLIBERTY_HOME>, and a default profile created)
 2. DB2 Machine (Server running DB2)
 3. Driver Machine (Server running JMeter with jmeter files copied to <JMETER_HOME>/bin, and the WebSocket plugin copied to <JMETER_HOME>/lib/ext, see jmeter_files)
 
-** Setup Open Liberty 
+## Setup Open Liberty 
 
 Build Daytrader8;
 [Download](https://github.com/OpenLiberty/sample.daytrader8/archive/master.zip) or clone this repo - to clone:
@@ -19,9 +19,9 @@ From inside the sample.daytrader8 directory, build the application:
 ```
 mvn clean package
 ```
-Copy target/io.openliberty.sample.daytrader8.war to <OPENLIBERTY_HOME>/usr/servers/defaultServer/apps
-Copy src/main/liberty/config/server.xml_db2 to <OPENLIBERTY_HOME>/usr/servers/defaultServer/server.xml  (overwrite)
-Copy db2 jars from the DB2 Machine to <OPENLIBERTY_HOME>/usr/shared/db2jars
+* Copy target/io.openliberty.sample.daytrader8.war to <OPENLIBERTY_HOME>/usr/servers/defaultServer/apps
+* Copy src/main/liberty/config/server.xml_db2 to <OPENLIBERTY_HOME>/usr/servers/defaultServer/server.xml  (overwrite)
+* Copy db2 jars from the DB2 Machine to <OPENLIBERTY_HOME>/usr/shared/db2jars
 ```
 db2jcc4.jar
 db2jcc_license_cu.jar
@@ -43,7 +43,7 @@ tradeDbPort
 tradeDbName
 ```
 
-** Set up DB2
+## Set up DB2
 Sign in to DB2 machine as db2 user and create tradedb database
 ```
 db2 create db tradedb
@@ -56,24 +56,23 @@ db2stop
 db2start
 ```
  
-** Load Database
+## Load Database
 
 Start OpenLiberty:
 ```
 <OPENLIBERTY_HOME>/bin/server start --clean
-``
+```
  
 With a web browser go to http://openliberty-hostname:9080/daytrader/configure.html
-``
+```
 Click (Re)-create  DayTrader Database Tables and Indexes
 Click (Re)-populate  DayTrader Database
-``
-
+```
  
 Stop Liberty Server
 ```
 <OPENLIBERTY_HOME>/bin/server stop
-``
+```
  
 On the DB2 Server, Put the following into a script (backupTradeDB.sh) and run as the db2 user
 ```
@@ -127,27 +126,26 @@ db2 restore db tradedb from ~/backups/tradedb replace existing
 
 Note: If disk writing/reading becomes a bottleneck, you may need to create a ramdisk and restore the database to the ramdisk.
 
-
-** Applying Load
+## Apply Load
 On the DB2 Server, restore the database (as db2 user)
 ```
 restoreTradeDB.sh
-``
+```
 
 Start Liberty
 ```
 <OPENLIBERTY_HOME>/bin/server start
-``
+```
 
-On the JMETER Serverm, Start JMeter:
+On the JMETER Server, Start JMeter:
 ```
 cd <JMETER_HOME>/bin
 ./jmeter -n -t daytrader8.jmx -JHOST=openliberty-hostname -JDURATION=180
-``
+```
 
 Preferably, do three 180 second warm up runs and then three 180 second measurement runs with a 30 second break in between each.
 
 Also, a best practice is to reset the database between each run, which can be done on the configuration tab of the application.
 ```
 http://openliberty-hostname:9080/daytrader/config?action=resetTrade
-``
+```
