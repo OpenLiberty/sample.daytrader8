@@ -22,7 +22,7 @@ Use the Jmeter plugin manager or download via https://bitbucket.org/pjtr/jmeter-
 
 The script has the following options:
 	-JHOST	    The name of the machine running the DayTrader Application. The default is localhost.
-	-JPORT	    The HTTP port of the server running the DayTrader Application. The default is 9082.
+	-JPORT	    The HTTP port of the server running the DayTrader Application. The default is 9080.
 	-JPROTOCOL  The transport either http or https
 				NOTE: The websocket plugin does not offer a variable substitution. See the WS note below.
 	-JTHREADS   The number of jmeter threads to start. The default is 50.
