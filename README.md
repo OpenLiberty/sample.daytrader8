@@ -14,10 +14,10 @@ git clone git@github.com:OpenLiberty/sample.daytrader8.git
 
 From inside the sample.daytrader8 directory, build and start the application in Open Liberty with the following command:
 ```
-mvn clean package liberty:run-server
+mvn clean package liberty:run
 ```
 
-The server will listen on port 9080 by default.  You can change the port (for example, to port 9081) by adding `mvn clean package liberty:run-server -DtestServerHttpPort=9081` to the end of the Maven command.
+The server will listen on port 9080 by default.  You can change the port (for example, to port 9081) by adding `mvn clean package liberty:run -DtestServerHttpPort=9081` to the end of the Maven command.
 
 Once the server is started, you should be able to access the application at:
 http://localhost:9080/daytrader

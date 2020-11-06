@@ -1,134 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    
-    <groupId>io.openliberty.samples</groupId>
-    <artifactId>io.openliberty.sample.daytrader8</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
-
-    <parent>
-      <groupId>net.wasdev.wlp.maven.parent</groupId>
-      <artifactId>liberty-maven-app-parent</artifactId>
-      <version>2.6.1</version>
-    </parent>
-    
-
-    <properties>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>io.openliberty.samples</groupId>
+   <artifactId>io.openliberty.sample.daytrader8</artifactId>
+   <version>1.0-SNAPSHOT</version>
+   <packaging>war</packaging>
+   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
       <maven.compiler.source>1.8</maven.compiler.source>
       <maven.compiler.target>1.8</maven.compiler.target>
-      <app.name>LibertyProject</app.name>
+      <!-- Derby library -->
+      <version.derby>10.14.2.0</version.derby>
+      <derby.path>${user.home}/.m2/repository/org/apache/derby/derby</derby.path>
+      <!-- Liberty configuration -->
       <testServerHttpPort>9080</testServerHttpPort>
       <testServerHttpsPort>9443</testServerHttpsPort>
-      <package.file>${project.build.directory}/${app.name}.zip</package.file>
-      <packaging.type>usr</packaging.type>
-      <skipTests>false</skipTests>
-    </properties>
-	
-    <dependencies>
+   </properties>
+   <dependencies>
       <dependency>
-        <groupId>javax</groupId>
-        <artifactId>javaee-api</artifactId>
-        <version>8.0</version>
-        <scope>provided</scope>
+         <groupId>javax</groupId>
+         <artifactId>javaee-api</artifactId>
+         <version>8.0</version>
+         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>taglibs</groupId>
-        <artifactId>standard</artifactId>
-        <version>1.1.1</version>
-        <scope>compile</scope>
+         <groupId>taglibs</groupId>
+         <artifactId>standard</artifactId>
+         <version>1.1.1</version>
+         <scope>compile</scope>
       </dependency>
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.0</version>
-        <scope>provided</scope>
+         <groupId>javax.xml.bind</groupId>
+         <artifactId>jaxb-api</artifactId>
+         <version>2.3.0</version>
+         <scope>provided</scope>
       </dependency>
-    </dependencies>
-
-    <build>
-    <finalName>${project.artifactId}</finalName>
-    <plugins>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-dependency-plugin</artifactId>
-         <version>3.0.0</version>
-         <executions>
-           <execution>
-            <id>copy-derby</id>
-            <phase>package</phase>
-            <goals>
-             <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.apache.derby</groupId>
-                  <artifactId>derby</artifactId>
-                  <version>10.13.1.1</version>
-                  <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources/DerbyLibs</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-       </plugin>
-       <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-                <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources/data</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>resources/data</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>              
-            </configuration>            
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-          <packagingExcludes>pom.xml</packagingExcludes>
-        </configuration>
-      </plugin>
+      <!-- Derby from https://mvnrepository.com/artifact/org.apache.derby/derby -->
+      <dependency>
+         <groupId>org.apache.derby</groupId>
+         <artifactId>derby</artifactId>
+         <version>${version.derby}</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <finalName>${project.artifactId}</finalName>
       <!-- Enable liberty-maven plugin -->
-      <plugin>
-        <groupId>net.wasdev.wlp.maven.plugins</groupId>
-        <artifactId>liberty-maven-plugin</artifactId>
-        <version>2.0</version>
-        <configuration>
-          <assemblyArtifact>
-            <groupId>io.openliberty</groupId>
-            <artifactId>openliberty-runtime</artifactId>
-            <version>RELEASE</version>
-            <type>zip</type>
-          </assemblyArtifact>
-          <serverName>sampleAppServer</serverName>
-          <configFile>src/main/liberty/config/server.xml</configFile>
-          <serverEnv>src/main/liberty/config/server.env</serverEnv>
-          <packageFile>${package.file}</packageFile>
-          <include>${packaging.type}</include>
-          <bootstrapProperties>
-            <default.http.port>${testServerHttpPort}</default.http.port>
-            <default.https.port>${testServerHttpsPort}</default.https.port>
-          </bootstrapProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
+      <plugins>
+         <plugin>
+            <groupId>io.openliberty.tools</groupId>
+            <artifactId>liberty-maven-plugin</artifactId>
+            <version>3.3-M4</version>
+            <configuration>
+              <bootstrapProperties>
+                <default.http.port>${testServerHttpPort}</default.http.port>
+                <default.https.port>${testServerHttpsPort}</default.https.port>
+              </bootstrapProperties>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.1.2</version>
+            <executions>
+               <execution>
+                  <id>copy-derby-dependency</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>copy-dependencies</goal>
+                  </goals>
+                  <configuration>
+                     <includeArtifactIds>derby</includeArtifactIds>
+                     <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources/DerbyLibs/</outputDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+               <execution>
+                  <id>copy-resources</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                     <outputDirectory>${project.build.directory}/liberty/wlp/usr/shared/resources/data</outputDirectory>
+                     <resources>
+                        <resource>
+                           <directory>resources/data</directory>
+                           <filtering>false</filtering>
+                        </resource>
+                     </resources>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
 </project>
