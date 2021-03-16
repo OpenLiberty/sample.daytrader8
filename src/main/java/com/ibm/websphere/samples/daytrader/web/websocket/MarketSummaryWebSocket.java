@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2015.
+ * (C) Copyright IBM Corporation 2015, 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,8 +59,7 @@ public class MarketSummaryWebSocket {
   
   private TradeServices tradeAction;
 
-  private static final List<Session> sessions = new CopyOnWriteArrayList<>();
-  private Session currentSession = null;   
+  private static final List<Session> sessions = new CopyOnWriteArrayList<>();  
   private final CountDownLatch latch = new CountDownLatch(1);
 
   @Inject 
@@ -77,16 +76,17 @@ public class MarketSummaryWebSocket {
     Log.trace("MarketSummaryWebSocket:onOpen -- session -->" + session + "<--");
 
     sessions.add(session);
-    currentSession = session;
     latch.countDown();
   } 
 
   @OnMessage
-  public void sendMarketSummary(ActionMessage message) {
+  public void sendMarketSummary(ActionMessage message, Session currentSession) {
 
     String action = message.getDecodedAction();
 
     Log.trace("MarketSummaryWebSocket:sendMarketSummary -- received -->" + action + "<--");
+
+    // Make sure onopen is finished
     try { 
       latch.await();
     } catch (Exception e) {
@@ -102,9 +102,7 @@ public class MarketSummaryWebSocket {
         JsonObject mkSummary = tradeAction.getMarketSummary().toJSON();
 
         Log.trace("MarketSummaryWebSocket:sendMarketSummary -- sending -->" + mkSummary + "<--");
-
-        // Make sure onopen is finished
-        
+                
         currentSession.getAsyncRemote().sendText(mkSummary.toString());
         
       } catch (Exception e) {
@@ -118,7 +116,7 @@ public class MarketSummaryWebSocket {
   }
 
   @OnError
-  public void onError(Throwable t) {
+  public void onError(Throwable t, Session currentSession) {
     Log.trace("MarketSummaryWebSocket:onError -- session -->" + currentSession + "<--");
     t.printStackTrace();
   }

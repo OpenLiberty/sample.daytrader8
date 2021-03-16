@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.0 r1840935">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DayTrader8" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -24,11 +24,13 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <stringProp name="ThreadGroup.duration">${__P(DURATION, 180)}</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
         <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
           <collectionProp name="CookieManager.cookies"/>
           <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
           <stringProp name="CookieManager.policy">rfc2109</stringProp>
         </CookieManager>
         <hashTree/>
@@ -99,18 +101,6 @@
           <boolProp name="CounterConfig.per_user">false</boolProp>
         </CounterConfig>
         <hashTree/>
-        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller" enabled="true"/>
-        <hashTree>
-          <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection" enabled="true">
-            <boolProp name="TLS">false</boolProp>
-            <stringProp name="server">${hostname}</stringProp>
-            <stringProp name="port">${port}</stringProp>
-            <stringProp name="path">/daytrader/marketsummary</stringProp>
-            <stringProp name="readTimeout">60000</stringProp>
-            <stringProp name="connectTimeout">20000</stringProp>
-          </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
-          <hashTree/>
-        </hashTree>
         <RandomController guiclass="RandomControlGui" testclass="RandomController" testname="Random Controller" enabled="true">
           <intProp name="InterleaveControl.style">1</intProp>
         </RandomController>
@@ -490,25 +480,59 @@
                   </FloatProperty>
                 </ThroughputController>
                 <hashTree>
-                  <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="WS1 open close" enabled="true">
-                    <boolProp name="createNewConnection">true</boolProp>
-                    <boolProp name="TLS">false</boolProp>
-                    <stringProp name="server">${hostname}</stringProp>
-                    <stringProp name="port">${port}</stringProp>
-                    <stringProp name="path">/daytrader/marketsummary</stringProp>
-                    <boolProp name="binaryPayload">false</boolProp>
-                    <stringProp name="requestData">{&quot;action&quot;:&quot;update&quot;}</stringProp>
-                    <stringProp name="readTimeout">60000</stringProp>
-                    <stringProp name="TestPlan.comments">open and close</stringProp>
-                    <stringProp name="connectTimeout">20000</stringProp>
-                    <boolProp name="loadDataFromFile">false</boolProp>
-                    <stringProp name="dataFile"></stringProp>
-                  </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+                  <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+                    <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
+                    <boolProp name="IfController.evaluateAll">false</boolProp>
+                    <boolProp name="IfController.useExpression">true</boolProp>
+                  </IfController>
                   <hashTree>
-                    <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
-                      <stringProp name="ConstantTimer.delay">${maxthinkingtime}</stringProp>
-                    </ConstantTimer>
-                    <hashTree/>
+                    <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="WS1 open close http" enabled="true">
+                      <boolProp name="createNewConnection">true</boolProp>
+                      <boolProp name="TLS">false</boolProp>
+                      <stringProp name="server">${hostname}</stringProp>
+                      <stringProp name="port">${port}</stringProp>
+                      <stringProp name="path">/daytrader/marketsummary</stringProp>
+                      <boolProp name="binaryPayload">false</boolProp>
+                      <stringProp name="requestData">{&quot;action&quot;:&quot;updateMarketSummary&quot;}</stringProp>
+                      <stringProp name="readTimeout">20000</stringProp>
+                      <stringProp name="TestPlan.comments">open and close</stringProp>
+                      <stringProp name="connectTimeout">20000</stringProp>
+                      <boolProp name="loadDataFromFile">false</boolProp>
+                      <stringProp name="dataFile"></stringProp>
+                    </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+                    <hashTree>
+                      <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                        <stringProp name="ConstantTimer.delay">${maxthinkingtime}</stringProp>
+                      </ConstantTimer>
+                      <hashTree/>
+                    </hashTree>
+                  </hashTree>
+                  <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+                    <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
+                    <boolProp name="IfController.evaluateAll">false</boolProp>
+                    <boolProp name="IfController.useExpression">true</boolProp>
+                  </IfController>
+                  <hashTree>
+                    <eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler" testname="WS1 open close https" enabled="true">
+                      <boolProp name="createNewConnection">true</boolProp>
+                      <boolProp name="TLS">true</boolProp>
+                      <stringProp name="server">${hostname}</stringProp>
+                      <stringProp name="port">${port}</stringProp>
+                      <stringProp name="path">/daytrader/marketsummary</stringProp>
+                      <boolProp name="binaryPayload">false</boolProp>
+                      <stringProp name="requestData">{&quot;action&quot;:&quot;updateMarketSummary&quot;}</stringProp>
+                      <stringProp name="readTimeout">20000</stringProp>
+                      <stringProp name="TestPlan.comments">open and close</stringProp>
+                      <stringProp name="connectTimeout">20000</stringProp>
+                      <boolProp name="loadDataFromFile">false</boolProp>
+                      <stringProp name="dataFile"></stringProp>
+                    </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
+                    <hashTree>
+                      <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+                        <stringProp name="ConstantTimer.delay">${maxthinkingtime}</stringProp>
+                      </ConstantTimer>
+                      <hashTree/>
+                    </hashTree>
                   </hashTree>
                 </hashTree>
                 <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Buy_JSF" enabled="true">
@@ -1511,6 +1535,38 @@
               </ConstantTimer>
               <hashTree/>
             </hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+              <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection http" enabled="true">
+                <boolProp name="TLS">false</boolProp>
+                <stringProp name="server">${hostname}</stringProp>
+                <stringProp name="port">${port}</stringProp>
+                <stringProp name="path">/daytrader/marketsummary</stringProp>
+                <stringProp name="readTimeout">20000</stringProp>
+                <stringProp name="connectTimeout">20000</stringProp>
+              </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+              <hashTree/>
+            </hashTree>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+              <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection https" enabled="true">
+                <boolProp name="TLS">true</boolProp>
+                <stringProp name="server">${hostname}</stringProp>
+                <stringProp name="port">${port}</stringProp>
+                <stringProp name="path">/daytrader/marketsummary</stringProp>
+                <stringProp name="readTimeout">20000</stringProp>
+                <stringProp name="connectTimeout">20000</stringProp>
+              </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+              <hashTree/>
+            </hashTree>
             <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
               <stringProp name="WhileController.condition">${loop}</stringProp>
             </WhileController>
@@ -1734,8 +1790,8 @@
                     <stringProp name="port">${port}</stringProp>
                     <stringProp name="path">/daytrader/marketsummary</stringProp>
                     <boolProp name="binaryPayload">false</boolProp>
-                    <stringProp name="requestData">{&quot;action&quot;:&quot;update&quot;}</stringProp>
-                    <stringProp name="readTimeout">60000</stringProp>
+                    <stringProp name="requestData">{&quot;action&quot;:&quot;updateMarketSummary&quot;}</stringProp>
+                    <stringProp name="readTimeout">20000</stringProp>
                     <stringProp name="TestPlan.comments">use existing open connection </stringProp>
                     <stringProp name="connectTimeout">20000</stringProp>
                     <boolProp name="loadDataFromFile">false</boolProp>
@@ -2379,6 +2435,11 @@
                 </hashTree>
               </hashTree>
             </hashTree>
+            <eu.luminis.jmeter.wssampler.CloseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.CloseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.CloseWebSocketSampler" testname="WebSocket Close" enabled="false">
+              <stringProp name="statusCode">4000</stringProp>
+              <stringProp name="readTimeout">6000</stringProp>
+            </eu.luminis.jmeter.wssampler.CloseWebSocketSampler>
+            <hashTree/>
           </hashTree>
           <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Throughput Controller JAX-RS" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
@@ -2468,11 +2529,11 @@
             <sampleCount>true</sampleCount>
           </value>
         </objProp>
-        <stringProp name="filename">daytrader7.aggregateReport.csv</stringProp>
+        <stringProp name="filename">daytrader8.aggregateReport.csv</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <boolProp name="ResultCollector.error_logging">true</boolProp>
         <objProp>
           <name>saveConfig</name>
           <value class="SampleSaveConfiguration">
@@ -2503,7 +2564,7 @@
             <sampleCount>true</sampleCount>
           </value>
         </objProp>
-        <stringProp name="filename">daytrader7.resultsTree.csv</stringProp>
+        <stringProp name="filename">daytrader8.resultsTree.csv</stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="false">
