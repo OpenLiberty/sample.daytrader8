@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DayTrader8" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DayTrader8 - Mojarra JSF" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -140,7 +140,7 @@
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="javax.faces.ViewState" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
                     <stringProp name="Argument.value">${jsfViewState}</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
@@ -167,12 +167,12 @@
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
                     <stringProp name="Argument.name">login:uid</stringProp>
                   </elementProp>
-                  <elementProp name="login_SUBMIT" elementType="HTTPArgument">
+                  <elementProp name="login" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">1</stringProp>
+                    <stringProp name="Argument.value">login</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                    <stringProp name="Argument.name">login_SUBMIT</stringProp>
+                    <stringProp name="Argument.name">login</stringProp>
                   </elementProp>
                 </collectionProp>
               </elementProp>
@@ -275,19 +275,19 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">quotes:symbols</stringProp>
                         </elementProp>
-                        <elementProp name="quotes:submit2" elementType="HTTPArgument">
+                        <elementProp name="quotes:submit" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
                           <stringProp name="Argument.value">quotes</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">quotes:submit2</stringProp>
+                          <stringProp name="Argument.name">quotes:submit</stringProp>
                         </elementProp>
-                        <elementProp name="quotes_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="quotes" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">quotes</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">quotes_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">quotes</stringProp>
                         </elementProp>
                         <elementProp name="quotes:quotes:0:quantity" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -469,7 +469,7 @@
                     <hashTree/>
                   </hashTree>
                 </hashTree>
-                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary" enabled="true">
+                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary" enabled="false">
                   <intProp name="ThroughputController.style">1</intProp>
                   <boolProp name="ThroughputController.perThread">true</boolProp>
                   <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -588,19 +588,19 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">quotes:symbols</stringProp>
                         </elementProp>
-                        <elementProp name="quotes:submit2" elementType="HTTPArgument">
+                        <elementProp name="quotes:submit" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
                           <stringProp name="Argument.value">quotes</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">quotes:submit2</stringProp>
+                          <stringProp name="Argument.name">quotes:submit</stringProp>
                         </elementProp>
-                        <elementProp name="quotes_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="quotes" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">quotes</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">quotes_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">quotes</stringProp>
                         </elementProp>
                         <elementProp name="quotes:quotes:0:quantity" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -711,12 +711,12 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">quotes:quotes:0:buy</stringProp>
                         </elementProp>
-                        <elementProp name="quotes_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="quotes" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">quotes</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">quotes_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">quotes</stringProp>
                         </elementProp>
                       </collectionProp>
                     </elementProp>
@@ -814,19 +814,19 @@
                             <boolProp name="HTTPArgument.use_equals">true</boolProp>
                             <stringProp name="Argument.name">javax.faces.ViewState</stringProp>
                           </elementProp>
-                          <elementProp name="portfolio:_idcl" elementType="HTTPArgument">
+                          <elementProp name="portfolio:holdings:0:sell" elementType="HTTPArgument">
                             <boolProp name="HTTPArgument.always_encode">false</boolProp>
                             <stringProp name="Argument.value">portfolio:holdings:0:sell</stringProp>
                             <stringProp name="Argument.metadata">=</stringProp>
                             <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                            <stringProp name="Argument.name">portfolio:_idcl</stringProp>
+                            <stringProp name="Argument.name">portfolio:holdings:0:sell</stringProp>
                           </elementProp>
-                          <elementProp name="portfolio_SUBMIT" elementType="HTTPArgument">
+                          <elementProp name="portfolio" elementType="HTTPArgument">
                             <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                            <stringProp name="Argument.value">1</stringProp>
+                            <stringProp name="Argument.value">portfolio</stringProp>
                             <stringProp name="Argument.metadata">=</stringProp>
                             <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                            <stringProp name="Argument.name">portfolio_SUBMIT</stringProp>
+                            <stringProp name="Argument.name">portfolio</stringProp>
                           </elementProp>
                           <elementProp name="portfolio:symbols" elementType="HTTPArgument">
                             <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -960,17 +960,17 @@
                         </elementProp>
                         <elementProp name="updateProfile:email" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">rndEmail@email.com</stringProp>
+                          <stringProp name="Argument.value">rndEmail</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">updateProfile:email</stringProp>
                         </elementProp>
-                        <elementProp name="updateProfile_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="updateProfile" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">updateProfile</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">updateProfile_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">updateProfile</stringProp>
                         </elementProp>
                         <elementProp name="updateProfile:submit" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -978,13 +978,6 @@
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">updateProfile:submit</stringProp>
-                        </elementProp>
-                        <elementProp name="updateProfile:symbols" elementType="HTTPArgument">
-                          <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">s:0,s:1,s:2,s:3,s:4</stringProp>
-                          <stringProp name="Argument.metadata">=</stringProp>
-                          <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">updateProfile:symbols</stringProp>
                         </elementProp>
                       </collectionProp>
                     </elementProp>
@@ -1051,26 +1044,26 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">javax.faces.ViewState</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome:_idcl" elementType="HTTPArgument">
+                        <elementProp name="tradeHome:logoff" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
                           <stringProp name="Argument.value">tradeHome:logoff</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome:_idcl</stringProp>
+                          <stringProp name="Argument.name">tradeHome:logoff</stringProp>
                         </elementProp>
                         <elementProp name="tradeHome:symbols" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">s:0,s:1,s:2,s:3,s:4</stringProp>
+                          <stringProp name="Argument.value">s:1,s:2,s:3,s:4</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">tradeHome:symbols</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="tradeHome" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">tradeHome</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">tradeHome</stringProp>
                         </elementProp>
                       </collectionProp>
                     </elementProp>
@@ -1191,12 +1184,12 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">register:ccn</stringProp>
                         </elementProp>
-                        <elementProp name="register_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="register" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">register</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">register_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">register</stringProp>
                         </elementProp>
                         <elementProp name="register:submit" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -1268,26 +1261,26 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">javax.faces.ViewState</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome:_idcl" elementType="HTTPArgument">
+                        <elementProp name="tradeHome:logoff" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
                           <stringProp name="Argument.value">tradeHome:logoff</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome:_idcl</stringProp>
+                          <stringProp name="Argument.name">tradeHome:logoff</stringProp>
                         </elementProp>
                         <elementProp name="tradeHome:symbols" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">s:0,s:1,s:2,s:3,s:4</stringProp>
+                          <stringProp name="Argument.value">s:1,s:2,s:3,s:4</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">tradeHome:symbols</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="tradeHome" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">tradeHome</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">tradeHome</stringProp>
                         </elementProp>
                       </collectionProp>
                     </elementProp>
@@ -1376,12 +1369,12 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">javax.faces.ViewState</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome:_idcl" elementType="HTTPArgument">
+                        <elementProp name="tradeHome:logoff" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
                           <stringProp name="Argument.value">tradeHome:logoff</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome:_idcl</stringProp>
+                          <stringProp name="Argument.name">tradeHome:logoff</stringProp>
                         </elementProp>
                         <elementProp name="tradeHome:symbols" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -1390,12 +1383,12 @@
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">tradeHome:symbols</stringProp>
                         </elementProp>
-                        <elementProp name="tradeHome_SUBMIT" elementType="HTTPArgument">
+                        <elementProp name="tradeHome" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">1</stringProp>
+                          <stringProp name="Argument.value">tradeHome</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                          <stringProp name="Argument.name">tradeHome_SUBMIT</stringProp>
+                          <stringProp name="Argument.name">tradeHome</stringProp>
                         </elementProp>
                       </collectionProp>
                     </elementProp>
@@ -1448,7 +1441,7 @@
             <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="GetViewState" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">jsfViewState</stringProp>
-              <stringProp name="RegexExtractor.regex">&lt;input type=&quot;hidden&quot; name=&quot;javax\.faces\.ViewState&quot; id=&quot;j_id__v_0:javax\.faces\.ViewState:1&quot; value=&quot;([^&quot;]+)&quot;.*/&gt;</stringProp>
+              <stringProp name="RegexExtractor.regex">&lt;input type=&quot;hidden&quot; name=&quot;javax\.faces\.ViewState&quot; .* value=&quot;([^&quot;]+)&quot;.*/&gt;</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default"></stringProp>
               <stringProp name="RegexExtractor.match_number">0</stringProp>
@@ -1535,7 +1528,7 @@
               </ConstantTimer>
               <hashTree/>
             </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="false">
               <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
@@ -1551,7 +1544,7 @@
               </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
               <hashTree/>
             </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="false">
               <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>

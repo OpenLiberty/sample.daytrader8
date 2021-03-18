@@ -469,7 +469,7 @@
                     <hashTree/>
                   </hashTree>
                 </hashTree>
-                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary" enabled="true">
+                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary" enabled="false">
                   <intProp name="ThroughputController.style">1</intProp>
                   <boolProp name="ThroughputController.perThread">true</boolProp>
                   <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -1535,7 +1535,7 @@
               </ConstantTimer>
               <hashTree/>
             </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="false">
               <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
@@ -1551,7 +1551,7 @@
               </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
               <hashTree/>
             </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="false">
               <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
               <boolProp name="IfController.useExpression">true</boolProp>
@@ -1772,7 +1772,7 @@
                     <hashTree/>
                   </hashTree>
                 </hashTree>
-                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary JSP" enabled="true">
+                <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="MarketSummary JSP" enabled="false">
                   <intProp name="ThroughputController.style">1</intProp>
                   <boolProp name="ThroughputController.perThread">true</boolProp>
                   <intProp name="ThroughputController.maxThroughput">1</intProp>
@@ -2599,7 +2599,7 @@
             <sampleCount>true</sampleCount>
           </value>
         </objProp>
-        <stringProp name="filename">daytrader8.resultsTable.csv</stringProp>
+        <stringProp name="filename">daytrader7.resultsTable.csv</stringProp>
       </ResultCollector>
       <hashTree/>
     </hashTree>
