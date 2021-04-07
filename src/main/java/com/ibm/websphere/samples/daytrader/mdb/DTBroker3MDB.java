@@ -39,13 +39,14 @@ import com.ibm.websphere.samples.daytrader.util.TimerStat;
 import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 import com.ibm.websphere.samples.daytrader.util.TradeRunTimeModeLiteral;
 
-// For Glassfish - take jms/ off of the destination name
+// For Glassfish/Payara - take jms/ off of the destination name
 
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
     @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/TradeBrokerQueue"),
+    //@ActivationConfigProperty(propertyName = "destination", propertyValue = "TradeBrokerQueue"),
     @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "NonDurable") })
 @Trace
 public class DTBroker3MDB implements MessageListener {

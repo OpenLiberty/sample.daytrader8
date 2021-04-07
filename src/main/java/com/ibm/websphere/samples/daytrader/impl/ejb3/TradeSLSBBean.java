@@ -72,17 +72,20 @@ import com.ibm.websphere.samples.daytrader.util.TradeConfig;
 public class TradeSLSBBean implements TradeServices {
 
     // For Wildfly - add java:/ to these resource names.
-
     @Resource(name = "jms/QueueConnectionFactory", authenticationType = javax.annotation.Resource.AuthenticationType.APPLICATION)
+    //@Resource(name = "java:/jms/QueueConnectionFactory", authenticationType = javax.annotation.Resource.AuthenticationType.APPLICATION)
     private QueueConnectionFactory queueConnectionFactory;
 
     @Resource(name = "jms/TopicConnectionFactory", authenticationType = javax.annotation.Resource.AuthenticationType.APPLICATION)
+    //@Resource(name = "java:/jms/TopicConnectionFactory", authenticationType = javax.annotation.Resource.AuthenticationType.APPLICATION)
     private TopicConnectionFactory topicConnectionFactory;
 
     @Resource(lookup = "jms/TradeStreamerTopic")
+    //@Resource(lookup = "java:/jms/TradeStreamerTopic")
     private Topic tradeStreamerTopic;
 
     @Resource(lookup = "jms/TradeBrokerQueue")
+    //@Resource(lookup = "java:/jms/TradeBrokerQueue")
     private Queue tradeBrokerQueue;
 
     @PersistenceContext

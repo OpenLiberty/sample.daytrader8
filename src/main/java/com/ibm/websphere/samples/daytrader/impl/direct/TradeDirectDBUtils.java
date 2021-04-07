@@ -55,6 +55,7 @@ public class TradeDirectDBUtils implements TradeDB {
   // For Wildfly - add java:/ to this resource.
   
   @Resource(lookup = "jdbc/TradeDataSource")
+  //@Resource(lookup = "java:/jdbc/TradeDataSource")
   private DataSource datasource;
 
   @Inject 

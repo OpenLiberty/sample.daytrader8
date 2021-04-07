@@ -33,13 +33,14 @@ import com.ibm.websphere.samples.daytrader.util.Log;
 import com.ibm.websphere.samples.daytrader.util.MDBStats;
 import com.ibm.websphere.samples.daytrader.util.TimerStat;
 
-//For Glassfish - take jms/ off of the destination name
+//For Glassfish/Payara - take jms/ off of the destination name
 
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @MessageDriven(activationConfig = { @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
     @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic"),
     @ActivationConfigProperty(propertyName = "destination", propertyValue = "jms/TradeStreamerTopic"),
+    //@ActivationConfigProperty(propertyName = "destination", propertyValue = "TradeStreamerTopic"),
     @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "NonDurable") })
 @Trace
 public class DTStreamer3MDB implements MessageListener {
