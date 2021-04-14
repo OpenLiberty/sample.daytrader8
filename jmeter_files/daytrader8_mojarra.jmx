@@ -960,7 +960,7 @@
                         </elementProp>
                         <elementProp name="updateProfile:email" elementType="HTTPArgument">
                           <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                          <stringProp name="Argument.value">rndEmail</stringProp>
+                          <stringProp name="Argument.value">rndEmail@email.com</stringProp>
                           <stringProp name="Argument.metadata">=</stringProp>
                           <boolProp name="HTTPArgument.use_equals">true</boolProp>
                           <stringProp name="Argument.name">updateProfile:email</stringProp>
