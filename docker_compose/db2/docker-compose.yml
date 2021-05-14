@@ -1,7 +1,7 @@
 version: "3"
 services:
   daytrader:
-    image: jamescrowleyibm/daytrader:8-websphereliberty-db2
+    image: jamescrowleyibm/daytrader:8-openliberty-db2
     restart: unless-stopped
     depends_on:
       - db2
