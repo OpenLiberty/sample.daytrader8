@@ -1,0 +1,63 @@
+FROM adoptopenjdk:8-jdk-openj9
+
+ARG JMETER_VERSION="5.3"
+ARG JMETER_PLUGINS_MANAGER_VERSION="1.6"
+ARG CMDRUNNER_VERSION="2.2"
+ARG JMETER_PLUGIN_LIST="websocket-samplers"
+ARG MIRROR_HOST="https://archive.apache.org/dist/jmeter"
+
+# JMeter Enviroment Variables
+ENV JMETER_HOME=/opt/apache-jmeter
+ENV JMX_FILE=/tests/daytrader8.jmx
+ENV JTL_LOG_FILE=/tests/results/test_results.jtl
+
+## DayTrader Enviroment Variables
+ENV JHOST=localhost
+ENV JPORT=9080
+ENV JPROTOCOL=http
+ENV JTHREADS=50
+ENV JRAMP=0
+ENV JDURATION=60
+ENV JMAXTHINKTIME=0
+ENV JSTOCKS=9999
+ENV JBOTUID=0
+ENV JTOPUID=14999
+ENV SLEEP_TIME=480
+
+# Install JMeter
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl tar \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -fsSLO ${MIRROR_HOST}/binaries/apache-jmeter-${JMETER_VERSION}.tgz \
+    && curl -fsSLO ${MIRROR_HOST}/binaries/apache-jmeter-${JMETER_VERSION}.tgz.sha512 \
+    && sha512sum -c apache-jmeter-${JMETER_VERSION}.tgz.sha512 \
+    && tar -zvxf apache-jmeter-${JMETER_VERSION}.tgz -C /opt/ \
+    && mv /opt/apache-jmeter-${JMETER_VERSION} /opt/apache-jmeter \
+    && rm -f apache-jmeter-${JMETER_VERSION}.tgz.sha512 \
+    && rm -f apache-jmeter-${JMETER_VERSION}.tgz
+
+# Add JMeter to the PATH
+ENV PATH=$PATH:${JMETER_HOME}/bin
+
+# Install any Plugins needed for JMeter Tests
+RUN curl -fsSLO http://search.maven.org/remotecontent?filepath=kg/apc/jmeter-plugins-manager/${JMETER_PLUGINS_MANAGER_VERSION}/jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar \
+    && curl -fsSLO http://search.maven.org/remotecontent?filepath=kg/apc/jmeter-plugins-manager/${JMETER_PLUGINS_MANAGER_VERSION}/jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar.sha1 \
+    && echo "$(cat jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar.sha1) jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar" | sha1sum -c \
+    && mv jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar ${JMETER_HOME}/lib/ext/ \
+    && rm -f jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar.sha1 \
+    && curl -fsSLO http://search.maven.org/remotecontent?filepath=kg/apc/cmdrunner/${CMDRUNNER_VERSION}/cmdrunner-${CMDRUNNER_VERSION}.jar \
+    && curl -fsSLO http://search.maven.org/remotecontent?filepath=kg/apc/cmdrunner/${CMDRUNNER_VERSION}/cmdrunner-${CMDRUNNER_VERSION}.jar.sha1 \
+    && echo "$(cat cmdrunner-${CMDRUNNER_VERSION}.jar.sha1) cmdrunner-${CMDRUNNER_VERSION}.jar" | sha1sum -c \
+    && mv cmdrunner-${CMDRUNNER_VERSION}.jar ${JMETER_HOME}/lib/ \
+    && rm -f cmdrunner-${CMDRUNNER_VERSION}.jar.sha1 \
+    && java -cp ${JMETER_HOME}/lib/ext/jmeter-plugins-manager-${JMETER_PLUGINS_MANAGER_VERSION}.jar org.jmeterplugins.repository.PluginManagerCMDInstaller \
+    && ${JMETER_HOME}/bin/PluginsManagerCMD.sh install ${JMETER_PLUGIN_LIST} \
+    && ${JMETER_HOME}/bin/PluginsManagerCMD.sh status
+
+# Add JMX Scripts
+COPY ./jmeter_files/* /tests/
+
+# Add entrypoint
+COPY docker/entrypoint.sh /
+
+ENTRYPOINT ["/entrypoint.sh"]

@@ -1,0 +1,18 @@
+version: "3"
+services:
+  daytrader:
+    image: jamescrowleyibm/daytrader:8-websphereliberty-derby
+    restart: unless-stopped
+    env_file: env/daytrader.env
+    ports:
+      - 9080:9080
+      - 9443:9443
+  driver:
+    image: jamescrowleyibm/daytrader:driver
+    restart: "no"
+    depends_on:
+      - daytrader
+    env_file: env/daytrader.env
+    volumes:
+      - ./config/jmeter.properties:/opt/apache-jmeter/bin/jmeter.properties
+      - /tmp/results:/tests/results

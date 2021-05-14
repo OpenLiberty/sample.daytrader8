@@ -1,0 +1,35 @@
+version: "3"
+services:
+  daytrader:
+    image: jamescrowleyibm/daytrader:8-websphereliberty-db2
+    restart: unless-stopped
+    depends_on:
+      - db2
+    env_file: env/daytrader.env
+    ports:
+      - 9080:9080
+      - 9443:9443
+    volumes:
+      - db2-jars:/config/db2jars
+  db2:
+    image: ibmcom/db2:11.5.5.1
+    restart: unless-stopped
+    env_file: env/daytrader.env
+    privileged: true
+    ipc: host
+    volumes:
+      - ./config/performance_tuning.sh:/var/custom/performance_tuning.sh
+      - db2-jars:/opt/ibm/db2/V11.5/java
+  driver:
+    image: jamescrowleyibm/daytrader:driver
+    restart: "no"
+    depends_on:
+      - db2
+    env_file: env/daytrader.env
+    volumes:
+      - ./config/jmeter.properties:/opt/apache-jmeter/bin/jmeter.properties
+      - /tmp/results:/tests/results
+
+volumes:
+  db2-jars:
+    driver: local
