@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <server>
     <featureManager>
         <feature>ejb-3.2</feature>
@@ -16,45 +17,47 @@
         <feature>jaxrs-2.1</feature>
         <feature>ssl-1.0</feature>
     </featureManager>
-        <!--<logging traceSpecification="daytrader=fine"/>-->
+	<!--<logging traceSpecification="daytrader=fine"/>-->
 
-	<!-- allow reuse of 'busy' ports for fast server recycling on linux (where ports remain blocked for up to 2 mins after server stops) ${tradelite.http.port} set in bootstrap.properties --> 
-	<httpEndpoint host="*" httpPort="9080" httpsPort="9443" id="defaultHttpEndpoint"> 
-		<tcpOptions soReuseAddr="true"/> 
-		<httpOptions maxKeepAliveRequests="-1"/>
+   	<!-- allow reuse of 'busy' ports for fast server recycling on linux (where ports remain blocked for up to 2 mins after server stops) ${tradelite.http.port} set in bootstrap.properties -->
+	<httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint">
+		<tcpOptions soReuseAddr="true" />
+		<httpOptions maxKeepAliveRequests="-1" />
 	</httpEndpoint>
 
 	<webApplication id="daytrader8" location="io.openliberty.sample.daytrader8.war" name="daytrader8" context-root="${contextRoot}"/>
 
-        <keyStore id="defaultKeyStore" password="yourPassword" />
+	<keyStore id="defaultKeyStore" password="yourPassword" />
 
-	<connectionManager agedTimeout="-1" connectionTimeout="0" id="conMgr1" maxIdleTime="-1" maxPoolSize="100" minPoolSize="100" purgePolicy="FailingConnectionOnly" reapTime="-1"/> 
+	<!-- Database Configuration -->
+	<authData id="TradeDataSourceAuthData" password="${DB_PASSWORD}" user="${DB_USERNAME}" />
+	<authData id="TradeAdminAuthData" password="${DB_PASSWORD}" user="${DB_USERNAME}" />
 
-        <jdbcDriver id="DB2JCC" libraryRef="DB2JCCLib"/>
-        <library id="DB2JCCLib" filesetRef="DB2JCCFileset"/>
-        <fileset id="DB2JCCFileset" dir="${shared.resource.dir}/db2jars" includes="db2jcc4.jar"/>
+	<!-- DB2 Library Configuration -->
+	<jdbcDriver id="DB2JCC" libraryRef="DB2JCCLib"/>
+	<library id="DB2JCCLib" filesetRef="DB2JCCFileset"/>
+	<fileset id="DB2JCCFileset" dir="${shared.resource.dir}/db2jars" includes="db2jcc4.jar"/>
 
-        <authData id="TradeDataSourceAuthData" user="${dbUser}" password="${dbPass}"/>
-        <authData id="TradeAdminAuthData" user="${dbUser}" password="${dbPass}"/>
+	<connectionManager agedTimeout="-1" connectionTimeout="0" id="conMgr1" maxIdleTime="-1" maxPoolSize="100" minPoolSize="100" purgePolicy="FailingConnectionOnly" reapTime="-1"/>
+	<dataSource jndiName="jdbc/TradeDataSource" jdbcDriverRef="DB2JCC" id="DefaultDataSource" connectionManagerRef="conMgr1" statementCacheSize="60" isolationLevel="TRANSACTION_READ_COMMITTED" type="javax.sql.ConnectionPoolDataSource">
+		<properties serverName="${DB_HOST}" portNumber="${DB_PORT}" databaseName="${DB_NAME}" driverType="4" password="${DB_PASSWORD}" user="${DB_USERNAME}"/>
+	</dataSource>
+	<!-- End of Database Configuration -->
 
-        <dataSource jndiName="jdbc/TradeDataSource" jdbcDriverRef="DB2JCC" id="DefaultDataSource" connectionManagerRef="conMgr1" statementCacheSize="60" isolationLevel="TRANSACTION_READ_COMMITTED" type="javax.sql.ConnectionPoolDataSource">
-          <properties serverName="${tradeDbHost}" portNumber="${tradeDbPort}" databaseName="${tradeDbName}" driverType="4" user="${dbUser}" password="${dbPass}"/>
-        </dataSource>
-
-	<messagingEngine id="defaultME">
+    <messagingEngine id="defaultME">
 		<queue id="TradeBrokerQueue"/>
 		<topicSpace id="TradeTopicSpace"/>
 	</messagingEngine>
 
-	<jmsQueueConnectionFactory connectionManagerRef="ConMgr3" jndiName="jms/TradeBrokerQCF">  
+	<jmsQueueConnectionFactory connectionManagerRef="ConMgr2" jndiName="jms/TradeBrokerQCF">
 		<properties.wasJms/>
-	</jmsQueueConnectionFactory> 
-	<connectionManager id="ConMgr3" maxPoolSize="20"/>
+	</jmsQueueConnectionFactory>
+	<connectionManager id="ConMgr2" maxPoolSize="20"/>
 
-	<jmsTopicConnectionFactory connectionManagerRef="ConMgr4" jndiName="jms/TradeStreamerTCF">
+	<jmsTopicConnectionFactory connectionManagerRef="ConMgr3" jndiName="jms/TradeStreamerTCF">
 		<properties.wasJms/>
 	</jmsTopicConnectionFactory>
-	<connectionManager id="ConMgr4" maxPoolSize="20"/>
+	<connectionManager id="ConMgr3" maxPoolSize="20"/>
 
 	<jmsQueue id="TradeBrokerQueue" jndiName="jms/TradeBrokerQueue">
 		<properties.wasJms deliveryMode="NonPersistent" queueName="TradeBrokerQueue"/>

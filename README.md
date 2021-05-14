@@ -22,7 +22,8 @@ The server will listen on port 9080 by default.  You can change the port (for ex
 Once the server is started, you should be able to access the application at:
 http://localhost:9080/daytrader
 
-
+Alternatively, you can also use Docker-Compose to deploy DayTrader. For more information on deploying via Docker-compose
+please check out the documentation [here](docker_compose/README.md).
 
 ## Notice
 

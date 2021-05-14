@@ -1,0 +1,78 @@
+language: bash
+sudo: required
+services:
+- docker
+dist: bionic
+
+env:
+  global:
+    - GIT_BRANCH=$TRAVIS_BRANCH
+    - IS_PULL_REQUEST=$TRAVIS_PULL_REQUEST
+    - DOCKER_NAMESPACE=jamescrowleyibm
+    - DOCKER_IMAGE=daytrader
+    - SUPPORTED_ARCHITECTURES="amd64 s390x ppc64le"
+
+jobs:
+  include:
+  - stage: Build
+    if: branch = master AND type != pull_request
+    os: linux
+    arch: amd64
+    script:
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-openliberty-db2 --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-websphereliberty-db2 --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-openliberty-derby --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-websphereliberty-derby --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-JMeter --image ${DOCKER_IMAGE} --tag driver --push --build-args "JMETER_VERSION=5.3 JMETER_PLUGIN_LIST=websocket-samplers"'
+  - os: linux
+    arch: s390x
+    script:
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-openliberty-db2 --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-websphereliberty-db2 --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-openliberty-derby --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-websphereliberty-derby --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-JMeter --image ${DOCKER_IMAGE} --tag driver --push --build-args "JMETER_VERSION=5.3 JMETER_PLUGIN_LIST=websocket-samplers"'
+  - os: linux
+    arch: ppc64le
+    script:
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-openliberty-db2 --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-DB2 --image ${DOCKER_IMAGE} --tag 8-websphereliberty-db2 --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-openliberty-derby --push --build-args "LIBERTY_IMAGE=open-liberty LIBERTY_TAG=full OPT_PATH=ol"'
+      - './.ci/build.sh -f docker/Dockerfile-Derby --image ${DOCKER_IMAGE} --tag 8-websphereliberty-derby --push --build-args "LIBERTY_IMAGE=websphere-liberty LIBERTY_TAG=kernel OPT_PATH=ibm"'
+      - './.ci/build.sh -f docker/Dockerfile-JMeter --image ${DOCKER_IMAGE} --tag driver --push --build-args "JMETER_VERSION=5.3 JMETER_PLUGIN_LIST=websocket-samplers"'
+
+  - stage: Tag
+    if: branch = master AND type != pull_request
+    os: linux
+    arch: s390x
+    script:
+      - './.ci/tag-image.sh --image ${DOCKER_IMAGE}:8-openliberty-db2 --tags "openliberty-db2 8-openliberty openliberty 8-db2 db2 8 latest"'
+      - './.ci/tag-image.sh --image ${DOCKER_IMAGE}:8-websphereliberty-db2 --tags "websphereliberty-db2 8-websphereliberty websphereliberty"'
+      - './.ci/tag-image.sh --image ${DOCKER_IMAGE}:8-openliberty-derby --tags "openliberty-derby 8-derby derby"'
+      - './.ci/tag-image.sh --image ${DOCKER_IMAGE}:8-websphereliberty-derby --tags "websphereliberty-derby"'
+
+  - stage: Manifest
+    if: branch = master AND type != pull_request
+    os: linux
+    arch: s390x
+    script:
+      - sudo bash ./.ci/enable-experimental.sh
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-openliberty-db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest openliberty-db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-openliberty --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest openliberty --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-websphereliberty-db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest websphereliberty-db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-websphereliberty --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest websphereliberty --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest db2 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8 --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest latest --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-openliberty-derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest openliberty-derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-websphereliberty-derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest websphereliberty-derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest 8-derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest derby --push
+      - sudo bash ./.ci/manifest.sh --image ${DOCKER_IMAGE} --manifest driver --push
