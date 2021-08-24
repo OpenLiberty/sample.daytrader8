@@ -571,6 +571,18 @@ public class TradeSLSBBean implements TradeServices {
         try (JMSContext queueContext = queueConnectionFactory.createContext();) {
             // Get a Quote and send a JMS message in a 2-phase commit
             quoteData = entityManager.find(QuoteDataBean.class, symbol);
+            
+            double sharesTraded = (Math.random() * 100) + 1 ;
+            BigDecimal oldPrice = quoteData.getPrice();
+            BigDecimal openPrice = quoteData.getOpen();
+            BigDecimal changeFactor = new BigDecimal (Math.random() * 100);
+
+            BigDecimal newPrice = changeFactor.multiply(oldPrice).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+            quoteData.setPrice(newPrice);
+            quoteData.setChange(newPrice.subtract(openPrice).doubleValue());
+            quoteData.setVolume(quoteData.getVolume() + sharesTraded);
+            entityManager.merge(quoteData);
 
             TextMessage message = queueContext.createTextMessage();
 
