@@ -26,24 +26,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 import com.ibm.websphere.samples.daytrader.interfaces.Trace;
-import com.ibm.websphere.samples.daytrader.util.Log;
+import com.ibm.websphere.samples.daytrader.util.Diagnostics;
 
 @WebFilter(filterName = "PrimFilter", urlPatterns = "/drive/*")
 @Trace
 public class PrimFilter implements Filter {
 	
-  private static final int DRIVE_MEMORY = Integer.getInteger("DRIVE_MEMORY", 0);
-  private static final int DRIVE_LATENCY = Integer.getInteger("DRIVE_LATENCY", 0);
-  
-  static {
-    if (DRIVE_MEMORY > 0) {
-      Log.warning("DRIVE_MEMORY=" + DRIVE_MEMORY + " has been specified which will allocate that many bytes on every /app* request");
-    }
-    if (DRIVE_LATENCY > 0) {
-      Log.warning("DRIVE_LATENCY=" + DRIVE_LATENCY + " has been specified which will sleep that many milliseconds on every /app* request");
-    }
-  }
-
   /**
    * @see Filter#init(FilterConfig)
    */
@@ -64,28 +52,7 @@ public class PrimFilter implements Filter {
       return;
     }
 
-    if (DRIVE_MEMORY > 0) {
-      byte[] memory = new byte[DRIVE_MEMORY];
-      // Not sure if Java will optimize this away if we don't use it, so just
-      // do something trivial
-      int count = 0;
-      for (byte b : memory) {
-        if ((b & 0x01) > 0) {
-          count++;
-        }
-      }
-      if (count > 0) {
-        Log.error("Something that shouldn't happen");
-      }
-	}
-
-    if (DRIVE_LATENCY > 0) {
-      try {
-        Thread.sleep(DRIVE_LATENCY);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
+    Diagnostics.checkDiagnostics();
 
     chain.doFilter(req, resp/* wrapper */);
   }
