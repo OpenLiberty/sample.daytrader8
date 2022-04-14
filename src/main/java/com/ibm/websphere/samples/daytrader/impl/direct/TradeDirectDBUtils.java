@@ -252,6 +252,7 @@ public class TradeDirectDBUtils implements TradeDB {
     try {
 
       conn = datasource.getConnection();
+      conn.setAutoCommit(false);
       PreparedStatement stmt = null;
       ResultSet rs = null;
 
