@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.3">
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="DayTrader8 - Mojarra JSF" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -88,6 +88,11 @@
               <stringProp name="Argument.value">${__P(PROTOCOL,http)}</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">http | https</stringProp>
+            </elementProp>
+            <elementProp name="websocket_timeout" elementType="Argument">
+              <stringProp name="Argument.name">websocket_timeout</stringProp>
+              <stringProp name="Argument.value">${__P(WEBSOCKET_TIMEOUT,60)}</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
           </collectionProp>
         </Arguments>
@@ -499,6 +504,7 @@
                       <stringProp name="connectTimeout">20000</stringProp>
                       <boolProp name="loadDataFromFile">false</boolProp>
                       <stringProp name="dataFile"></stringProp>
+                      <stringProp name="payloadType">Text</stringProp>
                     </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
                     <hashTree>
                       <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
@@ -526,6 +532,7 @@
                       <stringProp name="connectTimeout">20000</stringProp>
                       <boolProp name="loadDataFromFile">false</boolProp>
                       <stringProp name="dataFile"></stringProp>
+                      <stringProp name="payloadType">Text</stringProp>
                     </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
                     <hashTree>
                       <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
@@ -1459,6 +1466,128 @@
             </FloatProperty>
           </ThroughputController>
           <hashTree>
+            <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller" enabled="true"/>
+            <hashTree>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+                <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Initial Connection http" enabled="true">
+                  <boolProp name="TLS">false</boolProp>
+                  <stringProp name="server">${hostname}</stringProp>
+                  <stringProp name="port">${port}</stringProp>
+                  <stringProp name="path">/daytrader/marketsummary</stringProp>
+                  <stringProp name="readTimeout">20000</stringProp>
+                  <stringProp name="connectTimeout">20000</stringProp>
+                </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+                <hashTree/>
+              </hashTree>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+                <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Initial Connection https" enabled="true">
+                  <boolProp name="TLS">true</boolProp>
+                  <stringProp name="server">${hostname}</stringProp>
+                  <stringProp name="port">${port}</stringProp>
+                  <stringProp name="path">/daytrader/marketsummary</stringProp>
+                  <stringProp name="readTimeout">20000</stringProp>
+                  <stringProp name="connectTimeout">20000</stringProp>
+                </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+                <hashTree/>
+              </hashTree>
+              <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="WS2 Set Initial Timeout" enabled="true">
+                <stringProp name="scriptLanguage">groovy</stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="script">def StartTime = new Date() 
+use(groovy.time.TimeCategory) {
+	def webSocketTimeout = vars.get(&quot;websocket_timeout&quot;) as Integer
+	def duration = new groovy.time.TimeDuration(0, 0, webSocketTimeout, 0) 
+   	def EndTime = StartTime + duration
+     vars.put(&quot;EndTime&quot;, EndTime.getTime() as String)
+     
+}</stringProp>
+              </JSR223Sampler>
+              <hashTree/>
+            </hashTree>
+            <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="WS2 Get Current Time" enabled="true">
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">def CurrentTime = new Date() 
+use(groovy.time.TimeCategory) {
+        vars.put(&quot;CurrentTime&quot;, CurrentTime.getTime() as String)
+
+         
+}</stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223Sampler>
+            <hashTree/>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Check Timeout" enabled="true">
+              <stringProp name="IfController.condition">${__groovy((vars.get(&apos;CurrentTime&apos;) as long) - (vars.get(&apos;EndTime&apos;) as long) &gt;= 0,)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
+            <hashTree>
+              <eu.luminis.jmeter.wssampler.CloseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.CloseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.CloseWebSocketSampler" testname="WS2 - WebSocket Close" enabled="true">
+                <stringProp name="statusCode">1000</stringProp>
+                <stringProp name="readTimeout">6000</stringProp>
+              </eu.luminis.jmeter.wssampler.CloseWebSocketSampler>
+              <hashTree/>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
+                <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection http" enabled="true">
+                  <boolProp name="TLS">false</boolProp>
+                  <stringProp name="server">${hostname}</stringProp>
+                  <stringProp name="port">${port}</stringProp>
+                  <stringProp name="path">/daytrader/marketsummary</stringProp>
+                  <stringProp name="readTimeout">20000</stringProp>
+                  <stringProp name="connectTimeout">20000</stringProp>
+                </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+                <hashTree/>
+              </hashTree>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
+                <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection https" enabled="true">
+                  <boolProp name="TLS">true</boolProp>
+                  <stringProp name="server">${hostname}</stringProp>
+                  <stringProp name="port">${port}</stringProp>
+                  <stringProp name="path">/daytrader/marketsummary</stringProp>
+                  <stringProp name="readTimeout">20000</stringProp>
+                  <stringProp name="connectTimeout">20000</stringProp>
+                </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
+                <hashTree/>
+              </hashTree>
+              <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="WS2 Set Timeout" enabled="true">
+                <stringProp name="cacheKey">true</stringProp>
+                <stringProp name="filename"></stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="script">def StartTime = new Date() 
+use(groovy.time.TimeCategory) {
+	def webSocketTimeout = vars.get(&quot;websocket_timeout&quot;) as Integer
+	def duration = new groovy.time.TimeDuration(0, 0, webSocketTimeout, 0) 
+   	def EndTime = StartTime + duration
+     vars.put(&quot;EndTime&quot;, EndTime.getTime() as String)
+     
+}</stringProp>
+                <stringProp name="scriptLanguage">groovy</stringProp>
+              </JSR223Sampler>
+              <hashTree/>
+            </hashTree>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Login" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments">
@@ -1526,38 +1655,6 @@
               <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
                 <stringProp name="ConstantTimer.delay">${maxthinkingtime}</stringProp>
               </ConstantTimer>
-              <hashTree/>
-            </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If http" enabled="true">
-              <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;http&quot;,)}</stringProp>
-              <boolProp name="IfController.evaluateAll">false</boolProp>
-              <boolProp name="IfController.useExpression">true</boolProp>
-            </IfController>
-            <hashTree>
-              <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection http" enabled="true">
-                <boolProp name="TLS">false</boolProp>
-                <stringProp name="server">${hostname}</stringProp>
-                <stringProp name="port">${port}</stringProp>
-                <stringProp name="path">/daytrader/marketsummary</stringProp>
-                <stringProp name="readTimeout">20000</stringProp>
-                <stringProp name="connectTimeout">20000</stringProp>
-              </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
-              <hashTree/>
-            </hashTree>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If https" enabled="true">
-              <stringProp name="IfController.condition">${__jexl3(&quot;${protocol}&quot;== &quot;https&quot;,)}</stringProp>
-              <boolProp name="IfController.evaluateAll">false</boolProp>
-              <boolProp name="IfController.useExpression">true</boolProp>
-            </IfController>
-            <hashTree>
-              <eu.luminis.jmeter.wssampler.OpenWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.OpenWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.OpenWebSocketSampler" testname="WS2 Open Connection https" enabled="true">
-                <boolProp name="TLS">true</boolProp>
-                <stringProp name="server">${hostname}</stringProp>
-                <stringProp name="port">${port}</stringProp>
-                <stringProp name="path">/daytrader/marketsummary</stringProp>
-                <stringProp name="readTimeout">20000</stringProp>
-                <stringProp name="connectTimeout">20000</stringProp>
-              </eu.luminis.jmeter.wssampler.OpenWebSocketSampler>
               <hashTree/>
             </hashTree>
             <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
@@ -1789,6 +1886,7 @@
                     <stringProp name="connectTimeout">20000</stringProp>
                     <boolProp name="loadDataFromFile">false</boolProp>
                     <stringProp name="dataFile"></stringProp>
+                    <stringProp name="payloadType">Text</stringProp>
                   </eu.luminis.jmeter.wssampler.RequestResponseWebSocketSampler>
                   <hashTree>
                     <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
@@ -2428,11 +2526,6 @@
                 </hashTree>
               </hashTree>
             </hashTree>
-            <eu.luminis.jmeter.wssampler.CloseWebSocketSampler guiclass="eu.luminis.jmeter.wssampler.CloseWebSocketSamplerGui" testclass="eu.luminis.jmeter.wssampler.CloseWebSocketSampler" testname="WebSocket Close" enabled="false">
-              <stringProp name="statusCode">4000</stringProp>
-              <stringProp name="readTimeout">6000</stringProp>
-            </eu.luminis.jmeter.wssampler.CloseWebSocketSampler>
-            <hashTree/>
           </hashTree>
           <ThroughputController guiclass="ThroughputControllerGui" testclass="ThroughputController" testname="Throughput Controller JAX-RS" enabled="true">
             <intProp name="ThroughputController.style">1</intProp>
