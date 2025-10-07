@@ -31,6 +31,7 @@ The script has the following options:
 	-JSTOCKS    The total amount of stocks/quotes in the database, minus one. The default is 9999, which assumes there are 10,000 stocks in the database.
 	-JBOTUID    The lowest user id. The default is 0.
 	-JTOPUID    The highest user id. The default is 14999, which assumes there are 15,000 users in the database.
+	-JWEBSOCKET_TIMEOUT The amount of time to keep the websocket (WS2) open. The default is 60 seconds.
 	
 Example: ./jmeter -n -t daytrader8.jmx -JHOST=myserver -JPORT=9080 -JPROTOCOL=http -JMAXTHINKTIME=100 -JDURATION=300
 
