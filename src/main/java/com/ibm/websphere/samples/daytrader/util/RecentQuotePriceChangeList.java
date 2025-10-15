@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corporation 2019.
+ * (C) Copyright IBM Corporation 2019, 2025.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,15 +51,16 @@ public class RecentQuotePriceChangeList  {
 
   public boolean add(QuoteDataBean quoteData) {
 
-    int symbolNumber = new Integer(quoteData.getSymbol().substring(2));
+    int symbolNumber = Integer.parseInt(quoteData.getSymbol().substring(2));
 
     if ( symbolNumber < TradeConfig.getMAX_QUOTES() * TradeConfig.getListQuotePriceChangeFrequency() * 0.01) {
-      list.add(0, quoteData);
-
-      // Add stock, remove if needed
-      if(list.size() > maxSize) {
-        list.remove(maxSize);
-      }      
+      synchronized(list) {
+        list.add(0, quoteData);
+        // Add stock, remove if needed
+        if(list.size() > maxSize) {
+          list.remove(maxSize);
+        }
+      }
       quotePriceChangeEvent.fireAsync("quotePriceChange for symbol: " + quoteData.getSymbol(), NotificationOptions.builder().setExecutor(mes).build());
     }
     return true;
