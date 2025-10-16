@@ -92,7 +92,7 @@ public class MarketSummaryWebSocket {
     // Start scheduled service on first onOpen to send quotePriceChanges every 2 seconds (if there is an update)
     synchronized(SESSIONS) {
       if (SESSIONS.size() == 0) {
-        Log.trace("MarketSummaryWebSocket:onOpen -- cancel scheduler");
+        Log.trace("MarketSummaryWebSocket:onOpen -- start scheduler");
         startScheduler();
       }
 
